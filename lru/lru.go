@@ -24,30 +24,23 @@ func Constructor(capacity int) LRUCache {
 }
 
 func (this *LRUCache) Get(key int) int {
-	if node, ok := this.hash[key]; ok {
-		this.list.MoveToFront(node)
-		return node.Value.(Pair).Value
-	}
-	return -1
-}
-
-func (this *LRUCache) Put(key int, value int) {
+	var val = -1
 	el, ok := this.hash[key]
 	if ok {
 		this.list.MoveToFront(el)
-		pair := el.Value.(Pair)
-		pair.Value = value
-	} else {
-		if this.capacity == this.list.Len() {
-			last := this.list.Back()
-			pair := last.Value.(Pair)
-			delete(this.hash, pair.Key)
-			this.list.Remove(last)
-		} else {
-			node := &list.Element{Value: Pair{Key: key, Value: value}}
-			this.hash[key] = node
-			this.list.PushFront(el)
-		}
-
+		val = el.Value.(Pair).Value
 	}
+	return val
+}
+
+func (this *LRUCache) Put(key int, value int) {
+	el := &list.Element{Value: Pair{Key: key, Value: value}}
+	this.hash[key] = el
+	if this.capacity < len(this.hash) {
+		back := this.list.Back()
+		pair := back.Value.(*Pair)
+		delete(this.hash, pair.Key)
+		this.list.Remove(back)
+	}
+	this.list.PushFront(el)
 }
