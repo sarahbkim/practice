@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"reflect"
 	"testing"
 )
@@ -209,17 +208,17 @@ func Test_postorder(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			// 8 4 5 2 9 6 10 6 7 3 1
-			fmt.Print("postorder: ")
-			postorder(tt.args.n)
-			fmt.Println()
-			postorder2(tt.args.n)
+			// fmt.Print("postorder: ")
+			// postorder(tt.args.n)
+			// fmt.Println()
+			// postorder2(tt.args.n)
 			// inorderRecur(tt.args.n) // 8 4 2 5 1 9 6 10 3 7
 			// inorder(tt.args.n) // 8 4 2 5 1 9 6 10 3 7
 			// fmt.Print("inorder: ")
 			// inorder(tt.args.n)
 			// fmt.Println()
-			// preorderRecur(tt.args.n) // 1 2 4 8 5 3 6 9 10 7
-			// preorder(tt.args.n)
+			preorderRecur(tt.args.n) // 1 2 4 8 5 3 6 9 10 7
+			preorder(tt.args.n)
 		})
 	}
 }

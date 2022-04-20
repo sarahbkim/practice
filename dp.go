@@ -143,3 +143,110 @@ func numDecodings(s string) int {
 	}
 	return dp[len(s)]
 }
+
+func wordBreak(s string, wordDict []string) bool {
+	var dp = make([]bool, len(s)+1)
+	dp[0] = true
+
+	var dict = make(map[string]bool, len(wordDict))
+
+	for _, word := range wordDict {
+		dict[word] = false
+	}
+
+	for i := 1; i <= len(s); i++ {
+		for j := i - 1; j >= 0; j-- {
+			substr := s[j:i]
+			if _, ok := dict[substr]; ok && dp[j] {
+				dict[substr] = true
+				dp[i] = true
+			}
+		}
+	}
+	return dp[len(dp)-1]
+}
+
+func longestOnes(nums []int, k int) int {
+	var longest, zeroes int
+	var i, j int
+	for ; j < len(nums); j++ {
+		if nums[j] == 0 {
+			zeroes++
+		}
+		for zeroes > k {
+			if nums[i] == 0 {
+				zeroes--
+			}
+			i++
+		}
+		curr := j - i + 1
+		longest = max(longest, curr)
+	}
+	return longest
+}
+
+func max(a, b int) int {
+	if a > b {
+		return a
+	}
+	return b
+}
+
+func maxConsecutiveAnswers(answerKey string, k int) int {
+	var longest int
+	var i, j int
+	var answers = make(map[byte]int, 2)
+
+	var maxOccur int
+	for ; j < len(answerKey); j++ {
+		answers[answerKey[j]]++
+		maxOccur = max(maxOccur, answers[answerKey[j]])
+		for j-i+1-maxOccur > k {
+			answers[answerKey[i]]--
+			i++
+		}
+		longest = max(longest, j-i+1)
+	}
+	return longest
+}
+
+// func longestPalindrome(s string) string {
+// 	var longest string
+// 	var cache = map[[2]int]bool{}
+// 	for i := 0; i < len(s); i++ {
+// 		for j := 0; j < len(s); j++ {
+// 			if i == j || (s[i] == s[j] && cache[[2]int{i + 1, j - 1}]) {
+// 				cache[[2]int{i, j}] = true
+// 				if len(longest) < j-i+1 {
+// 					longest = s[i : j+1]
+// 				}
+// 			} else {
+// 				cache[[2]int{i, j}] = false
+// 			}
+// 		}
+// 	}
+// 	return longest
+// }
+
+func longestPalindrome(s string) string {
+	var longest string
+	var cache = map[[2]int]bool{}
+	var size int
+	for size < len(s) {
+		for i := 0; i < len(s)-size; i++ {
+			var lo = i
+			var hi = i + size
+			valid, _ := cache[[2]int{lo + 1, hi - 1}]
+			if lo == hi || (s[lo] == s[hi] && valid) {
+				if len(longest) < len(s[lo:hi+1]) {
+					longest = s[lo : hi+1]
+				}
+				cache[[2]int{lo, hi}] = true
+			} else {
+				cache[[2]int{lo, hi}] = false
+			}
+		}
+		size++
+	}
+	return longest
+}

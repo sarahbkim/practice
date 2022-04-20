@@ -3,6 +3,7 @@ package main
 type Trie struct {
 	chars  map[rune]*Trie
 	isWord bool
+	word   string
 }
 
 func NewTrie() Trie {
@@ -23,6 +24,7 @@ func (t *Trie) Insert(word string) {
 		}
 		if i == len(word)-1 {
 			curr.isWord = true
+			curr.word = word
 		}
 		curr = curr.chars[c]
 	}

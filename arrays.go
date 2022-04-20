@@ -39,7 +39,7 @@ func maxSubArrayLessMem(nums []int) int {
 	var maxSum = math.Inf(-1)
 
 	for i := 0; i < len(nums); i++ {
-		currSum = math.Max(float64(nums[i]), currSum + float64(nums[i]))
+		currSum = math.Max(float64(nums[i]), currSum+float64(nums[i]))
 		if currSum > maxSum {
 			maxSum = currSum
 		}
@@ -56,7 +56,7 @@ func productExceptSelf(nums []int) []int {
 		l *= nums[i]
 	}
 	var r = 1
-	for i := len(nums)-1; i >= 0; i-- {
+	for i := len(nums) - 1; i >= 0; i-- {
 		prod[i] = r * prod[i]
 		r *= nums[i]
 	}
@@ -115,7 +115,9 @@ func search(nums []int, target int) int {
 func rotatedSearchHelper(nums []int, s, e, t int) int {
 	if e >= s {
 		m := (s + e) / 2
-		if nums[m] == t{ return m }
+		if nums[m] == t {
+			return m
+		}
 		// sorted side
 		if nums[s] < nums[e] {
 
@@ -147,26 +149,30 @@ func threeSum(nums []int) [][]int {
 
 	// optimize
 	if len(nums) == 0 || nums[0] > 0 || nums[len(nums)-1] < 0 {
-	return nil
+		return nil
 	}
 
-	for i := 0; i < len(nums) - 2; i++ {
+	for i := 0; i < len(nums)-2; i++ {
 		// remove dupes
 		if i == 0 || nums[i] != nums[i-1] {
 			var lo = i + 1
-			var hi = len(nums)-1
+			var hi = len(nums) - 1
 			sum := 0 - nums[i]
 			// bidirectional sweep of array - 2sum
 			for lo < hi {
-				if nums[lo] + nums[hi] + nums[i] == 0 {
+				if nums[lo]+nums[hi]+nums[i] == 0 {
 					ans = append(ans, []int{nums[i], nums[lo], nums[hi]})
 					// remove dupes
-					for lo < hi && nums[lo] == nums[lo+1] { lo++ }
+					for lo < hi && nums[lo] == nums[lo+1] {
+						lo++
+					}
 					// remove dupes
-					for lo < hi && nums[hi] == nums[hi-1] { hi-- }
+					for lo < hi && nums[hi] == nums[hi-1] {
+						hi--
+					}
 					lo++
 					hi--
-				} else if nums[lo] + nums[hi] < sum {
+				} else if nums[lo]+nums[hi] < sum {
 					lo++
 				} else {
 					hi--
@@ -190,11 +196,11 @@ func urlify(str []byte, trueLen int) string {
 		}
 	}
 
-	bs := make([]byte, spaces * 2 + trueLen)
+	bs := make([]byte, spaces*2+trueLen)
 	copy(bs, str)
 
 	var index = (spaces * 2) + trueLen
-	for i := trueLen-1; i >= 0; i--{
+	for i := trueLen - 1; i >= 0; i-- {
 		if bs[i] == ' ' {
 			bs[index-1] = '0'
 			bs[index-2] = '2'
@@ -210,18 +216,24 @@ func urlify(str []byte, trueLen int) string {
 
 // 1.4 - Check if it is a permutation of a palindrome
 func palindromePermutation(str string) bool {
-	if len(str) == 1 { return true  }
+	if len(str) == 1 {
+		return true
+	}
 	var dict = map[string]int{}
 	for _, c := range str {
 		// todo: make lowercase
-		if c == ' ' { continue }
+		if c == ' ' {
+			continue
+		}
 		char := strings.ToLower(string(c))
 		dict[char]++
 	}
 	var odds bool
 	for _, counts := range dict {
-		if counts % 2 != 0 {
-			if odds { return false }
+		if counts%2 != 0 {
+			if odds {
+				return false
+			}
 			odds = true
 		}
 	}
@@ -232,9 +244,9 @@ func palindromePermutation(str string) bool {
 func oneEditAway(str1, str2 string) bool {
 	if len(str1) == len(str2) {
 		return checkOneReplace(str1, str2)
-	} else if len(str1) - 1 == len(str2)  {
+	} else if len(str1)-1 == len(str2) {
 		return checkOneInsert(str2, str1)
-	} else if len(str2) - 1 == len(str1) {
+	} else if len(str2)-1 == len(str1) {
 		return checkOneInsert(str1, str2)
 	}
 	return false
@@ -242,9 +254,11 @@ func oneEditAway(str1, str2 string) bool {
 
 func checkOneReplace(str1, str2 string) bool {
 	var foundDiff bool
-	for i, j := 0, 0; i < len(str1) && j < len(str2); i, j = i + 1, j + 1 {
+	for i, j := 0, 0; i < len(str1) && j < len(str2); i, j = i+1, j+1 {
 		if str1[i] != str2[j] {
-			if foundDiff { return false }
+			if foundDiff {
+				return false
+			}
 			foundDiff = true
 		}
 	}
@@ -255,7 +269,9 @@ func checkOneInsert(str1, str2 string) bool {
 	var insertCount int
 	for i, j := 0, 0; i < len(str1) && j < len(str2); {
 		if str1[i] != str2[j] {
-			if insertCount > 1 { return false }
+			if insertCount > 1 {
+				return false
+			}
 			insertCount++
 			// increment the pointer for longer string
 			if len(str1) < len(str2) {
@@ -275,7 +291,7 @@ func checkOneInsert(str1, str2 string) bool {
 func rotateMatrix(matrix [][]int) [][]int {
 	// reverse
 	for i := 0; i < len(matrix); i++ {
-		for j, k := 0, len(matrix[i])-1; j < k; j, k = j + 1, k - 1 {
+		for j, k := 0, len(matrix[i])-1; j < k; j, k = j+1, k-1 {
 			matrix[j][i], matrix[k][i] = matrix[k][i], matrix[j][i]
 		}
 	}
@@ -305,9 +321,64 @@ func zeroMatrix(A [][]int) [][]int {
 		A[row] = make([]int, len(A[row]))
 	}
 	for _, col := range cols {
-		for i := 0 ; i < len(A); i++ {
+		for i := 0; i < len(A); i++ {
 			A[i][col] = 0
 		}
 	}
 	return A
+}
+
+type nobj struct {
+	val int
+	idx int
+}
+
+func countSmaller(nums []int) []int {
+	var counts, nobjs = make([]int, len(nums)), make([]nobj, len(nums))
+	for i := 0; i < len(nums); i++ {
+		nobjs[i] = nobj{val: nums[i], idx: i}
+	}
+	mergeSort(&counts, 0, len(nums)-1, &nobjs)
+	return counts
+}
+
+func mergeSort(counts *[]int, lo, hi int, nobjs *[]nobj) {
+	if lo >= hi {
+		return
+	}
+	mid := (hi + lo) / 2
+	mergeSort(counts, lo, mid, nobjs)
+	mergeSort(counts, mid+1, hi, nobjs)
+	merge(counts, lo, mid, mid+1, hi, nobjs)
+}
+
+func merge(counts *[]int, li, lj, ri, rj int, nobjs *[]nobj) {
+	var tmp = make([]nobj, rj-li+1)
+	var k, count int
+	var i = li
+	var j = ri
+	for i <= lj && j <= rj {
+		if (*nobjs)[j].val < (*nobjs)[i].val {
+			tmp[k] = (*nobjs)[j]
+			j++
+			count++
+		} else {
+			tmp[k] = (*nobjs)[i]
+			originalIdx := (*nobjs)[i].idx
+			(*counts)[originalIdx] += count
+			i++
+		}
+		k++
+	}
+	for ; i <= lj; k, i = k+1, i+1 {
+		tmp[k] = (*nobjs)[i]
+		originalIdx := (*nobjs)[i].idx
+		(*counts)[originalIdx] += count
+	}
+	for ; j <= rj; k, j = k+1, j+1 {
+		tmp[k] = (*nobjs)[j]
+	}
+	for i := 0; i < len(tmp); i++ {
+		(*nobjs)[li+i] = tmp[i]
+	}
 }

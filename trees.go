@@ -304,22 +304,18 @@ func inorderRecur(n *TreeNode) {
 
 func preorder(n *TreeNode) {
 	var q = []*TreeNode{}
-	var s = []*TreeNode{}
 	q = append(q, n)
-	for len(q) > 0 || len(s) > 0 {
-		for len(q) > 0 {
-			n = q[0]
-			q = q[1:]
-			fmt.Print(n.Val, ",")
-			s = append(s, n)
-			if n.Left != nil {
-				q = append(q, n.Left)
-			}
-		}
-		n = s[len(s)-1]
-		s = s[0 : len(s)-1]
+	for len(q) > 0 {
+		// pop from stack
+		n = q[len(q)-1]
+		q = q[0 : len(q)-1]
+		fmt.Print(n.Val, ",")
 		if n.Right != nil {
 			q = append(q, n.Right)
+
+		}
+		if n.Left != nil {
+			q = append(q, n.Left)
 		}
 	}
 	fmt.Println()
