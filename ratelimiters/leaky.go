@@ -6,16 +6,16 @@ import (
 )
 
 type leakyBucket struct {
-	config           Config
-	requestsByClient map[string]int
-	mu               *sync.Mutex
+	config Config
+	count  int64
+	mu     *sync.Mutex
 }
 
-func NewLeakyBucket(done <-chan struct{}, config Config) RateLimiter {
+func NewLeakyBucket(done <-chan struct{}, config Config) *leakyBucket {
 	l := &leakyBucket{
-		config:           config,
-		requestsByClient: map[string]int{},
-		mu:               &sync.Mutex{},
+		config: config,
+		count:  0,
+		mu:     &sync.Mutex{},
 	}
 	go l.reset(done)
 	return l
@@ -29,25 +29,18 @@ func (l *leakyBucket) reset(done <-chan struct{}) {
 			return
 		case <-ticker.C:
 			l.mu.Lock()
-			for c := range l.requestsByClient {
-				l.requestsByClient[c] = l.config.RequestLimit
-			}
+			l.count = l.config.RequestLimit
 			l.mu.Unlock()
 		}
 	}
 }
 
-func (l *leakyBucket) Allow(clientID string) bool {
+func (l *leakyBucket) Allow() bool {
 	l.mu.Lock()
 	defer l.mu.Unlock()
-	counts, ok := l.requestsByClient[clientID]
-	if !ok {
-		l.requestsByClient[clientID] = l.config.RequestLimit - 1
-		return true
-	}
-	if counts == 0 {
+	if l.count == 0 {
 		return false
 	}
-	l.requestsByClient[clientID]--
+	l.count--
 	return true
 }

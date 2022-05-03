@@ -8,5 +8,5 @@ type RateLimiter interface {
 
 type Config struct {
 	Duration     time.Duration
-	RequestLimit int
+	RequestLimit int64
 }
