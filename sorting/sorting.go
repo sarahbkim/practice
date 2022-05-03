@@ -29,13 +29,13 @@ func directAccessSort(nums []int) []int {
 
 func quicksort(A []int, lo, hi int) {
 	if lo < hi {
-		s, e := partition(A, lo, hi)
+		s := partition(A, lo, hi)
 		quicksort(A, lo, s)
-		quicksort(A, e, hi)
+		quicksort(A, s+1, hi)
 	}
 }
 
-func partition(A []int, lo, hi int) (int, int) {
+func partition(A []int, lo, hi int) int {
 	var i, j, k = lo, hi, lo
 	var mid = (hi + lo) / 2
 	var pivot = A[mid]
@@ -51,14 +51,14 @@ func partition(A []int, lo, hi int) (int, int) {
 			A[k], A[j] = A[j], A[k]
 		}
 	}
-	return i, k
+	return i
 }
 
 func findKthSmallest(A []int, k int) int {
 	if len(A) == 1 {
 		return A[0]
 	}
-	p, _ := partition(A, 0, len(A))
+	p := partition(A, 0, len(A))
 	if p == k {
 		return A[p]
 	}
